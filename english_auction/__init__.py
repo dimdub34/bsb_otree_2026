@@ -71,7 +71,7 @@ class Auction(Page):
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         if player.id_in_group == player.group.highest_bidder:
-            player.payoff = C.BUDGET - player.group.highest_bid C.ITEM_VALUE
+            player.payoff = C.BUDGET - player.group.highest_bid + C.ITEM_VALUE
         else:
             player.payoff = C.BUDGET
 
