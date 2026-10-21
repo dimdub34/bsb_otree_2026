@@ -1,0 +1,112 @@
+{{ block title }}
+Beauty Contest - Results
+{{ endblock }}
+
+{{ block content }}
+<div class="container py-2" style="max-width: 760px;">
+
+    <!-- Outcome Banner -->
+    {{ if is_winner }}
+    <div class="card shadow-sm border-0 mb-4 rounded-4 overflow-hidden border-start border-success border-5">
+        <div class="card-body p-4 bg-success bg-opacity-10 text-center">
+            <div class="display-4 mb-2">🏆</div>
+            <h3 class="fw-bold text-white mb-1">Congratulations! You Won!</h3>
+            <p class="text-white mb-0">
+                Your choice was the closest to the target in your group of {{ C.PLAYERS_PER_GROUP }} players.
+            </p>
+        </div>
+    </div>
+    {{ else }}
+    <div class="card shadow-sm border-0 mb-4 rounded-4 overflow-hidden border-start border-primary border-5">
+        <div class="card-body p-4 bg-light text-center">
+            <div class="display-5 mb-2">🎯</div>
+            <h4 class="fw-bold text-dark mb-1">Task Completed</h4>
+            <p class="text-muted mb-0">
+                Another player was closer to the target. Here is the summary of the results.
+            </p>
+        </div>
+    </div>
+    {{ endif }}
+
+    <!-- Key Metrics Grid -->
+    <div class="row g-3 mb-4">
+        <!-- Player's Decision -->
+        <div class="col-sm-6 col-md-3">
+            <div class="card h-100 shadow-sm border-0 rounded-4 text-center p-3">
+                <span class="text-muted small fw-semibold text-uppercase tracking-wide">Your Choice</span>
+                <span class="display-6 fw-bold text-dark my-2">{{ player.decision }}</span>
+                <small class="text-muted">Your guess</small>
+            </div>
+        </div>
+
+        <!-- Group Average -->
+        <div class="col-sm-6 col-md-3">
+            <div class="card h-100 shadow-sm border-0 rounded-4 text-center p-3">
+                <span class="small fw-semibold text-uppercase tracking-wide">Group Average</span>
+                <span class="display-6 fw-bold text-secondary my-2">{{ average|to2 }}</span>
+                <small>All {{ C.PLAYERS_PER_GROUP }} players</small>
+            </div>
+        </div>
+
+        <!-- Target (2/3) -->
+        <div class="col-sm-6 col-md-3">
+            <div
+                class="card h-100 shadow-sm border-0 rounded-4 text-center p-3 bg-primary bg-opacity-10 border border-primary border-opacity-25">
+                <span class="text-white small fw-bold text-uppercase tracking-wide">Target (2/3)</span>
+                <span class="display-6 text-white  my-2">{{ target|to2 }}</span>
+                <small class="text-white fw-semibold">Winning threshold</small>
+            </div>
+        </div>
+
+        <!-- Distance to Target -->
+        <div class="col-sm-6 col-md-3">
+            <div
+                class="card h-100 shadow-sm border-0 rounded-4 text-center p-3 bg-primary bg-opacity-10 border border-primary border-opacity-25">
+                <span class="text-white small fw-bold text-uppercase tracking-wide">Your distance</span>
+                <span class="display-6 text-white  my-2">{{ diff|to2 }}</span>
+                <small class="text-white fw-semibold">|Choice - Target|</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Details Card -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+            <h5 class="fw-bold text-dark mb-0">📊 Calculation Breakdown</h5>
+        </div>
+        <div class="card-body p-4">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 px-0">
+                    <span class="text-muted">Average of numbers chosen by the group:</span>
+                    <strong class="fs-6">{{ average|to2 }}</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 px-0">
+                    <span class="text-muted">Target calculation (2/3 × {{ average|to2 }}):</span>
+                    <strong class="fs-6 text-primary">{{ target|to2 }}</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 px-0">
+                    <span class="text-muted">Your distance to target (|{{ player.decision }} - {{ target|to2
+                        }}|):</span>
+                    <strong class="fs-6 {{ if is_winner }}text-success{{ endif }}">{{ diff|to2 }}</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 px-0 border-bottom-0">
+                    <span class="text-muted">Your result:</span>
+                    {{ if is_winner }}
+                    <span class="badge bg-success py-2 px-3 rounded-pill fw-semibold">Winner 🏆</span>
+                    {{ else }}
+                    <span class="badge bg-secondary py-2 px-3 rounded-pill fw-semibold">Not closest</span>
+                    {{ endif }}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Next / Continue Button -->
+    <div class="mt-4">
+        <p class="text-center text-muted">
+            You can now close this window.
+        </p>
+    </div>
+
+</div>
+{{ endblock }}

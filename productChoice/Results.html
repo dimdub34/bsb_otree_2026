@@ -1,0 +1,37 @@
+{{ block title }}
+    Order Confirmation
+{{ endblock }}
+
+{{ block content }}
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center p-4">
+                {{ if player.buy }}
+                    <div class="text-success mb-3" style="font-size: 3.5rem;">✅</div>
+                    <h4 class="fw-bold text-success">Purchase Confirmed!</h4>
+                    <p class="text-muted">
+                        You chose to purchase the <strong>{{ C.PRODUCT_NAME }}</strong> for <strong>{{ C.PRODUCT_PRICE }}</strong>.
+                    </p>
+                {{ else }}
+                    <div class="text-secondary mb-3" style="font-size: 3.5rem;">❌</div>
+                    <h4 class="fw-bold text-secondary">No Purchase Made</h4>
+                    <p class="text-muted">
+                        You chose not to purchase the product.
+                    </p>
+                {{ endif }}
+                
+                <hr class="my-4">
+                
+                <div class="alert alert-light border py-2 small mb-4">
+                    <strong>Experimental Condition:</strong> <code>{{ player.treatment }}</code>
+                </div>
+                
+                <div class="d-grid">
+                    {{ next_button }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{ endblock }}

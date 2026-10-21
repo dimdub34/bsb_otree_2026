@@ -1,0 +1,40 @@
+{{ block title }}
+Simulator
+{{ endblock }}
+
+{{ block content }}
+
+{{ formfield "quantity" }}
+
+<p>
+    Simulated profit: <span id="simulatedProfit">0.00</span>
+</p>
+
+{{ next_button }}
+
+{{ endblock }}
+
+{{ block scripts }}
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        let quantityInput = document.querySelector("#id_quantity");
+        quantityInput.addEventListener("input", function () {
+            let quantity = quantityInput.value;
+            let profit = quantity * js_vars.unit_price - quantity * js_vars.unit_cost - js_vars.fixed_cost;
+
+            let simulatedProfit = document.querySelector("#simulatedProfit");
+            simulatedProfit.innerHTML = profit;
+
+            // optional
+            if (profit > 0) {
+                simulatedProfit.style.color = "green";
+            } else {
+                simulatedProfit.style.color = "red";
+            }
+        });
+    });
+
+</script>
+{{ endblock }}

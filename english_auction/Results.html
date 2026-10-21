@@ -1,0 +1,145 @@
+{{ block styles }}
+<style>
+    .metric-card {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+    }
+
+    .winner-highlight {
+        background-color: #ecfdf5;
+        border: 2px solid #a7f3d0;
+    }
+</style>
+{{ endblock }}
+
+{{ block title }}
+Auction Results
+{{ endblock }}
+
+{{ block content }}
+<div class="container py-2" style="max-width: 780px;">
+
+    <!-- Outcome Banner -->
+    {{ if is_winner }}
+    <div class="card shadow-sm border-0 mb-4 rounded-4 overflow-hidden border-start border-success border-5">
+        <div class="card-body p-4 bg-success bg-opacity-10 text-center">
+            <div class="display-4 mb-2">🏆</div>
+            <h3 class="fw-bold text-success mb-1">Congratulations! You Won the Auction!</h3>
+            <p class="text-secondary mb-0">
+                You placed the winning bid of <strong>{{ winning_bid|cu }}</strong> and won the item.
+            </p>
+        </div>
+    </div>
+    {{ else }}
+    <div class="card shadow-sm border-0 mb-4 rounded-4 overflow-hidden border-start border-primary border-5">
+        <div class="card-body p-4 bg-light text-center">
+            <div class="display-5 mb-2">🔨</div>
+            <h4 class="fw-bold text-dark mb-1">Auction Completed</h4>
+            <p class="text-muted mb-0">
+                Player <strong>{{ winner_id }}</strong> won the item with a final bid of <strong>{{ winning_bid|cu }}</strong>.
+            </p>
+        </div>
+    </div>
+    {{ endif }}
+
+    <!-- Key Metrics Grid -->
+    <div class="row g-3 mb-4">
+        <!-- Item Value -->
+        <div class="col-sm-6 col-md-3">
+            <div class="metric-card h-100 shadow-sm rounded-4 text-center p-3">
+                <span class="text-muted small fw-semibold text-uppercase tracking-wide">Item Value</span>
+                <span class="display-6 fw-bold text-dark my-2">{{ C.ITEM_VALUE|cu }}</span>
+                <small class="text-muted">True market value</small>
+            </div>
+        </div>
+
+        <!-- Winning Bid -->
+        <div class="col-sm-6 col-md-3">
+            <div class="metric-card h-100 shadow-sm rounded-4 text-center p-3">
+                <span class="text-muted small fw-semibold text-uppercase tracking-wide">Winning Bid</span>
+                <span class="display-6 fw-bold text-primary my-2">{{ winning_bid|cu }}</span>
+                <small class="text-muted">Final price paid</small>
+            </div>
+        </div>
+
+        <!-- Winner Identity -->
+        <div class="col-sm-6 col-md-3">
+            <div class="metric-card h-100 shadow-sm rounded-4 text-center p-3">
+                <span class="text-muted small fw-semibold text-uppercase tracking-wide">Winner</span>
+                <span class="display-6 fw-bold text-dark my-2">Player {{ winner_id }}</span>
+                <small class="text-muted">
+                    {{ if is_winner }}
+                    <span class="badge bg-success">You 👑</span>
+                    {{ else }}
+                    <span>Group member</span>
+                    {{ endif }}
+                </small>
+            </div>
+        </div>
+
+        <!-- Your Payoff -->
+        <div class="col-sm-6 col-md-3">
+            <div class="h-100 shadow-sm rounded-4 text-center p-3 {{ if is_winner }}winner-highlight{{ else }}metric-card{{ endif }}">
+                <span class="small fw-semibold text-uppercase tracking-wide {{ if is_winner }}text-success{{ else }}text-muted{{ endif }}">
+                    Your Payoff
+                </span>
+                <span class="display-6 fw-bold {{ if is_winner }}text-success{{ else }}text-dark{{ endif }} my-2">
+                    {{ player.payoff|cu }}
+                </span>
+                <small class="{{ if is_winner }}text-success fw-semibold{{ else }}text-muted{{ endif }}">
+                    {{ if is_winner }}Net profit{{ else }}No cost incurred{{ endif }}
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calculation Breakdown Card -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+            <h5 class="fw-bold text-dark mb-0">
+                <span class="me-2">📊</span> Payoff Breakdown
+            </h5>
+        </div>
+        <div class="card-body p-4">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 px-0">
+                    <span class="text-muted">Your player number:</span>
+                    <strong>Player {{ player.id_in_group }}</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 px-0">
+                    <span class="text-muted">Auction outcome:</span>
+                    {{ if is_winner }}
+                    <span class="badge bg-success py-2 px-3 rounded-pill fw-semibold">Winner 🏆</span>
+                    {{ else }}
+                    <span class="badge bg-secondary py-2 px-3 rounded-pill fw-semibold">Did not win</span>
+                    {{ endif }}
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 px-0">
+                    <span class="text-muted">Payoff calculation:</span>
+                    {{ if is_winner }}
+                    <span>
+                        <code>{{ C.ITEM_VALUE|cu }} (Item Value) − {{ winning_bid|cu }} (Your Bid)</code>
+                    </span>
+                    {{ else }}
+                    <span>
+                        <code>Did not win = 0</code>
+                    </span>
+                    {{ endif }}
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 px-0 border-bottom-0">
+                    <span class="fw-bold text-dark">Your Final Payoff:</span>
+                    <strong class="fs-5 {{ if is_winner }}text-success{{ else }}text-dark{{ endif }}">
+                        {{ player.payoff|cu }}
+                    </strong>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Next / Continue Button -->
+    <div class="d-grid gap-2">
+        {{ next_button }}
+    </div>
+
+</div>
+{{ endblock }}

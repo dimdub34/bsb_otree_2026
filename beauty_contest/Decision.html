@@ -1,0 +1,133 @@
+{{ block styles }}
+<style>
+    .decision-box {
+        max-width: 320px;
+        margin: 0 auto;
+    }
+
+    .decision-box label {
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 0.5rem;
+        display: block;
+        text-align: center;
+    }
+
+    #id_decision {
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: 1px;
+        border-radius: 0.6rem;
+        padding: 0.5rem 1rem;
+        border: 2px solid #cbd5e1;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    #id_decision:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.18);
+    }
+
+    .otree-btn-next {
+        min-width: 160px;
+        padding: 0.6rem 1.5rem;
+        font-weight: 600;
+        border-radius: 0.5rem;
+    }
+</style>
+{{ endblock }}
+
+{{ block title }}
+Beauty Contest Game
+{{ endblock }}
+
+{{ block content }}
+<div class="container py-2" style="max-width: 760px;">
+
+    <!-- Rules Card -->
+    <div class="card shadow-sm border-0 mb-4 rounded-4 overflow-hidden">
+        <div class="card-header bg-primary text-white py-3 px-4">
+            <div class="d-flex align-items-center justify-content-between">
+                <h5 class="mb-0 fw-bold text-white">
+                    <span class="me-2">🎯</span> Rules & Objectives
+                </h5>
+                <span class="badge bg-white text-dark fw-semibold px-3 py-2 rounded-pill shadow-sm">
+                    Group of {{ C.PLAYERS_PER_GROUP }} players
+                </span>
+            </div>
+        </div>
+
+        <div class="card-body p-4 bg-light">
+            <p class="lead fs-6 text-secondary mb-3">
+                Each participant in your group must secretly choose an integer between <strong>0 and 100</strong>.
+            </p>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                    <div class="p-3 bg-white rounded-3 shadow-none border text-center h-100">
+                        <div class="fs-2 mb-1">1️⃣</div>
+                        <div class="fw-bold text-dark">Your Choice</div>
+                        <small class="text-muted">Pick any integer between 0 and 100.</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-white rounded-3 shadow-none border text-center h-100">
+                        <div class="fs-2 mb-1">2️⃣</div>
+                        <div class="fw-bold text-dark">The Target</div>
+                        <small class="text-muted">The target equals <strong>2/3 of the average</strong> of all group choices.</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-white rounded-3 shadow-none border text-center h-100">
+                        <div class="fs-2 mb-1">🏆</div>
+                        <div class="fw-bold text-dark">The Winner</div>
+                        <small class="text-muted">The player closest to the target wins the game!</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Example Accordion -->
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item border-0 rounded-3 overflow-hidden shadow-sm">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed py-2 px-3 bg-white text-secondary fw-semibold small"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+                            aria-expanded="false" aria-controls="collapseExample">
+                            💡 View a detailed example
+                        </button>
+                    </h2>
+                    <div id="collapseExample" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                        data-bs-parent="#accordionExample">
+                        <div class="accordion-body bg-white small text-muted border-top">
+                            Suppose 4 players choose: <strong>20, 30, 40, and 70</strong>.<br>
+                            • Group average: <code>(20 + 30 + 40 + 70) / 4 = 40</code><br>
+                            • Target (2/3 of the average): <code>40 × 2/3 = 26.67</code><br>
+                            👉 The player who chose <strong>30</strong> is closest to 26.67 and wins!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decision Card -->
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-4 p-md-5 text-center">
+            <h5 class="fw-bold text-dark mb-4">Make Your Decision</h5>
+
+            <div class="decision-box my-3">
+                <!-- Standard oTree Field -->
+                {{ formfield 'decision' label="Your chosen number:" }}
+                <small class="text-muted d-block mt-1">Please enter an integer between 0 and 100.</small>
+            </div>
+
+            <!-- Next Button -->
+            <div class="mt-4 pt-2">
+                {{ next_button }}
+            </div>
+        </div>
+    </div>
+
+</div>
+{{ endblock }}

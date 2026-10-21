@@ -1,0 +1,345 @@
+{{ block styles }}
+<style>
+    .metric-card {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        transition: transform 0.15s ease-in-out;
+    }
+
+    .live-dashboard {
+        background: #ffffff;
+        border: 2px solid #e2e8f0;
+    }
+
+    .bid-input-container {
+        max-width: 320px;
+        margin: 0 auto;
+    }
+
+    #bid_amount {
+        font-size: 1.3rem;
+        font-weight: 700;
+        text-align: center;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        border: 2px solid #cbd5e1;
+    }
+
+    #bid_amount:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.18);
+    }
+
+    /* Custom Chat Widget Styling to match Bootstrap 5 theme */
+    .chat-card {
+        background: #ffffff;
+    }
+
+    .otree-chat {
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .otree-chat__messages {
+        height: 320px !important;
+        background: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 0.75rem !important;
+        padding: 0.75rem !important;
+        margin-bottom: 0.75rem !important;
+        overflow-y: auto;
+    }
+
+    .otree-chat__msg {
+        padding: 0.35rem 0.6rem;
+        margin-bottom: 0.4rem;
+        background: #ffffff;
+        border-radius: 0.5rem;
+        border: 1px solid #edf2f7;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        font-size: 0.9rem;
+        word-break: break-word;
+    }
+
+    .otree-chat__nickname {
+        display: inline-block;
+        color: #0d6efd !important;
+        font-weight: 700 !important;
+        font-size: 0.85rem;
+        width: auto !important;
+        margin-right: 0.4rem;
+    }
+
+    .otree-chat__nickname::after {
+        content: ":";
+    }
+
+    .otree-chat__body {
+        color: #334155;
+    }
+
+    .otree-chat__input {
+        border: 1.5px solid #cbd5e1 !important;
+        border-radius: 0.5rem !important;
+        padding: 0.45rem 0.75rem !important;
+        font-size: 0.92rem;
+        outline: none;
+        resize: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .otree-chat__input:focus {
+        border-color: #0d6efd !important;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.18) !important;
+    }
+
+    .otree-chat__btn-send {
+        background-color: #0d6efd !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 0.5rem !important;
+        font-weight: 600 !important;
+        padding: 0.45rem 1rem !important;
+        font-size: 0.92rem;
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+    }
+
+    .otree-chat__btn-send:hover {
+        background-color: #0b5ed7 !important;
+    }
+</style>
+{{ endblock }}
+
+{{ block title }}
+English Auction
+{{ endblock }}
+
+{{ block content }}
+<div class="container py-2" style="max-width: 1040px;">
+
+    <!-- Information Header -->
+    <div class="card shadow-sm border-0 mb-4 rounded-4 overflow-hidden">
+        <div class="card-header bg-primary text-white py-3 px-4">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <h5 class="mb-0 fw-bold text-white">
+                    <span class="me-2">🔨</span> Live English Auction
+                </h5>
+                <div class="d-flex gap-2">
+                    <span class="badge bg-white text-dark fw-semibold px-3 py-2 rounded-pill shadow-sm">
+                        You are Player {{ player.id_in_group }}
+                    </span>
+                    <span class="badge border border-white text-white fw-semibold px-3 py-2 rounded-pill">
+                        Group of {{ C.PLAYERS_PER_GROUP }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-4 bg-light">
+            <!-- Key Auction Parameters -->
+            <div class="row g-3 mb-3">
+                <div class="col-sm-6">
+                    <div class="metric-card p-3 rounded-3 text-center h-100">
+                        <span class="text-uppercase text-muted fw-bold small">Your Budget</span>
+                        <div class="display-6 fw-bold text-dark my-1">{{ C.BUDGET|cu }}</div>
+                        <small class="text-muted">Maximum amount you can bid</small>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="metric-card p-3 rounded-3 text-center h-100">
+                        <span class="text-uppercase text-muted fw-bold small">Item True Value</span>
+                        <div class="display-6 fw-bold text-dark my-1">{{ C.ITEM_VALUE|cu }}</div>
+                        <small class="text-muted">Payoff if you win = Value − Bid Price</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rules Accordion -->
+            <div class="accordion" id="accordionAuctionRules">
+                <div class="accordion-item border-0 rounded-3 overflow-hidden shadow-sm">
+                    <h2 class="accordion-header" id="headingRules">
+                        <button class="accordion-button collapsed py-2 px-3 bg-white text-secondary fw-semibold small"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseRules"
+                            aria-expanded="false" aria-controls="collapseRules">
+                            💡 Auction Rules & Payoff Details
+                        </button>
+                    </h2>
+                    <div id="collapseRules" class="accordion-collapse collapse" aria-labelledby="headingRules"
+                        data-bs-parent="#accordionAuctionRules">
+                        <div class="accordion-body bg-white small text-muted border-top">
+                            • The highest bidder at the end of the auction wins the item and pays their submitted bid price.<br>
+                            • If you win: <code>Payoff = {{ C.ITEM_VALUE|cu }} − Your Bid</code>.<br>
+                            • If you do not win: <code>Payoff = 0</code> and you pay nothing.<br>
+                            • Any new bid must strictly exceed the current highest bid and cannot exceed your budget ({{ C.BUDGET|cu }}).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Workspace (Auction Dashboard on Left, Group Chat on Right) -->
+    <div class="row g-4 align-items-stretch">
+
+        <!-- Left Column: Live Auction Status & Bidding Form -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h5 class="fw-bold text-dark mb-0">
+                            <span class="me-2">📊</span> Auction Status
+                        </h5>
+                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1 rounded-pill small">
+                            ● Active
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 text-center d-flex flex-column justify-content-between">
+                    <!-- Metrics Row -->
+                    <div class="row g-3 justify-content-center my-2">
+                        <!-- Highest Bid -->
+                        <div class="col-sm-6">
+                            <div class="p-3 rounded-4 live-dashboard">
+                                <span class="text-uppercase text-muted fw-bold small tracking-wide">Current Highest Bid</span>
+                                <div class="display-5 fw-bold text-primary my-2">
+                                    <span id="current_bid">{{ group.highest_bid }}</span>
+                                </div>
+                                <small class="text-muted">Units</small>
+                            </div>
+                        </div>
+
+                        <!-- Highest Bidder -->
+                        <div class="col-sm-6">
+                            <div class="p-3 rounded-4 live-dashboard">
+                                <span class="text-uppercase text-muted fw-bold small tracking-wide">Current Leader</span>
+                                <div class="display-5 fw-bold text-dark my-2">
+                                    Player <span id="current_bidder">{{ group.highest_bidder }}</span>
+                                </div>
+                                <div id="leader_badge">
+                                    {{ if group.highest_bidder == player.id_in_group }}
+                                    <span class="badge bg-success py-1 px-3 rounded-pill">👑 You are leading!</span>
+                                    {{ else }}
+                                    <span class="badge bg-secondary py-1 px-3 rounded-pill">You are outbid</span>
+                                    {{ endif }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Place Bid Form -->
+                    <div class="bid-input-container my-3">
+                        <label for="bid_amount" class="form-label fw-bold text-dark mb-2">
+                            Enter your new bid:
+                        </label>
+                        <div class="input-group mb-2">
+                            <input type="number" name="bid_amount" min="0" max="{{ C.BUDGET }}" placeholder="Bid"
+                                id="bid_amount" class="form-control">
+                            <button id="submit-bid" type="button" class="btn btn-primary px-4 fw-bold">
+                                Submit Bid
+                            </button>
+                        </div>
+                        <small class="text-muted d-block">
+                            Must be &gt; current bid and &le; {{ C.BUDGET }}
+                        </small>
+                    </div>
+
+                    <!-- Error Alert -->
+                    <div id="error-message" class="alert alert-danger d-none my-2 mx-auto" style="max-width: 420px;"
+                        role="alert"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Integrated Group Chat -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 rounded-4 chat-card h-100">
+                <div class="card-header bg-white border-0 pt-4 px-4 pb-2">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h5 class="fw-bold text-dark mb-0">
+                            <span class="me-2">💬</span> Group Discussion
+                        </h5>
+                        <span class="badge bg-light text-secondary border px-2 py-1 rounded-pill small">
+                            Participants Chat
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body p-4 d-flex flex-column">
+                    {{ chat }}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{{ endblock }}
+
+{{ block scripts }}
+<script>
+    const myPlayerId = {{ player.id_in_group }};
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const submitBidButton = document.querySelector("#submit-bid");
+        const bidAmountInput = document.querySelector("#bid_amount");
+        const errorDiv = document.querySelector("#error-message");
+
+        function sendBid() {
+            const bidVal = bidAmountInput.value.trim();
+            if (bidVal === "") {
+                errorDiv.innerText = "Please enter an amount before submitting.";
+                errorDiv.classList.remove("d-none");
+                return;
+            }
+            errorDiv.classList.add("d-none");
+            liveSend({ "bid": bidVal });
+        }
+
+        submitBidButton.addEventListener("click", sendBid);
+
+        bidAmountInput.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                sendBid();
+            }
+        });
+    });
+
+    function liveRecv(data) {
+        console.log("liveRecv received:", data);
+        const errorDiv = document.querySelector("#error-message");
+        const currentBidEl = document.querySelector("#current_bid");
+        const currentBidderEl = document.querySelector("#current_bidder");
+        const leaderBadgeEl = document.querySelector("#leader_badge");
+
+        // Always update current bid & bidder if provided
+        if (data.highest_bid !== undefined) {
+            currentBidEl.innerText = data.highest_bid;
+        }
+        if (data.highest_bidder !== undefined) {
+            currentBidderEl.innerText = data.highest_bidder;
+
+            // Update leader badge dynamically
+            if (parseInt(data.highest_bidder, 10) === myPlayerId) {
+                leaderBadgeEl.innerHTML = '<span class="badge bg-success py-1 px-3 rounded-pill">👑 You are leading!</span>';
+            } else {
+                leaderBadgeEl.innerHTML = '<span class="badge bg-secondary py-1 px-3 rounded-pill">You are outbid</span>';
+            }
+        }
+
+        // Handle error feedback
+        if (data.error) {
+            errorDiv.innerText = data.error;
+            errorDiv.classList.remove("d-none");
+        } else {
+            errorDiv.classList.add("d-none");
+            document.querySelector("#bid_amount").value = "";
+        }
+    }
+</script>
+{{ endblock }}
