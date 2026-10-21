@@ -1,0 +1,20 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>Session</th>
+            <th>Participant</th>
+            <th>Treatment</th>
+            <th>Buy</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ for p in players_info }}
+        <tr>
+            <td>{{ p.session }}</td>
+            <td>{{ p.participant }}</td>
+            <td>{{ p.treatment }}</td>
+            <td>{{ p.buy }}</td>
+        </tr>
+        {{ endfor }}
+    </tbody>
+</table>

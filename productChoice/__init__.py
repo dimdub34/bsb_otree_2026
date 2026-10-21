@@ -49,6 +49,22 @@ def custom_export(players):
         yield [p.session.code, p.participant.code, p.treatment, p.buy]
 
 
+def vars_for_admin_report(subsession: Subsession):
+    players_info = []
+    for p in subsession.get_players():
+        players_info.append(
+            dict(
+                session=p.session.code,
+                participant=p.participant.code,
+                treatment=p.treatment,
+                buy=p.field_maybe_none("buy"),
+            )
+        )
+    return {
+        "players_info": players_info,
+    }
+
+
 # ===========================================================================
 # --- PAGES ---
 # ===========================================================================
