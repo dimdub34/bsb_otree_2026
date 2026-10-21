@@ -41,6 +41,14 @@ def creating_session(subsession: Subsession):
         player.treatment = next(treatments)
 
 
+def custom_export(players):
+    # columns / variables
+    yield ["session", "participant", "treatment", "buy"]
+
+    for p in players:
+        yield [p.session.code, p.participant.code, p.treatment, p.buy]
+
+
 # ===========================================================================
 # --- PAGES ---
 # ===========================================================================

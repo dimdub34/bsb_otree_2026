@@ -39,7 +39,7 @@ SESSION_CONFIGS = [
     dict(
         name="beauty_contest",
         display_name="Beauty Contest",
-        app_sequence=["beauty_contest"],
+        app_sequence=["beauty_contest", "demographics"],
         num_demo_participants=4,
     ),
     dict(
@@ -57,7 +57,7 @@ SESSION_CONFIGS = [
     dict(
         name="product_choice",
         display_name="Product Choice - Treatment assigment example",
-        app_sequence=["productChoice"],
+        app_sequence=["productChoice", "demographics"],
         num_demo_participants=10,
     ),
 ]
