@@ -291,7 +291,7 @@ English Auction
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script>
     let mychart;
-    const myPlayerId = {{ player.id_in_group }};
+    const myPlayerId = js_vars.player_id;
 
     document.addEventListener("DOMContentLoaded", function () {
         const submitBidButton = document.querySelector("#submit-bid");

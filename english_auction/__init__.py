@@ -66,7 +66,7 @@ class Auction(Page):
 
     @staticmethod
     def js_vars(player: Player):
-        return {"budget": C.BUDGET}
+        return {"player_id": player.id_in_group, "budget": C.BUDGET}
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
